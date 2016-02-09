@@ -45,12 +45,12 @@ else
     code=1
 fi
 
-got=$(handle "other error")
-expected="received other error from signal-resource, retrying after 30 second pause..."
+got=$(handle "error")
+expected="received error from signal-resource, retrying after 30 second pause..."
 if [ "$got" = "$expected" ]; then
-    echo "ok - [handle] retry other error"
+    echo "ok - [handle] disregard ValidationError"
 else
-    echo "not ok - [handle] retry other error"
+    echo "not ok - [handle] disregard ValidationError"
     echo ""
     echo "  expected: ${expected}"
     echo "  got: ${got}"
@@ -63,6 +63,7 @@ echo "# run"
 function aws() {
     exit 0
 }
+
 STACK_NAME=xxx
 INSTANCE_ID=xxx
 got=$(run)
@@ -81,6 +82,7 @@ fi
 function aws() {
     >&2 echo "this is a ValidationError"
 }
+
 STACK_NAME=xxx
 INSTANCE_ID=xxx
 got=$(run) 
@@ -99,9 +101,9 @@ fi
 function aws() {
     >&2 echo "error"
 }
+
 STACK_NAME=xxx
 INSTANCE_ID=xxx
-got=$(run 1)
 expected="received error from signal-resource, retrying after 30 second pause...
 received error from signal-resource, retrying after 30 second pause...
 received error from signal-resource, retrying after 30 second pause...
@@ -109,15 +111,15 @@ received error from signal-resource, retrying after 30 second pause...
 received error from signal-resource, retrying after 30 second pause...
 received error from signal-resource, retrying after 30 second pause...
 ... stopping signal retry after 180 seconds"
-if [ "$got" = "$expected" ]; then
-    echo "ok - [run] retries other errors"
-else
+if got=$(run 1); then
     echo "not ok - [run] retries other errors"
     echo ""
-    echo "  expected: ${expected}"
+    echo "  expected: $(runRetries)"
     echo "  got: ${got}"
     echo ""
     code=1
+else
+    echo "ok - [run] retries other errors"
 fi
 
 if [ $code == 1 ]; then

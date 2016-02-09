@@ -31,7 +31,7 @@ function run() {
         count=$((count+1))
         if [ "$count" -gt 5 ]; then
             echo "... stopping signal retry after 180 seconds"
-            exit 0
+            exit 1
         fi
         
         sleep $pause
