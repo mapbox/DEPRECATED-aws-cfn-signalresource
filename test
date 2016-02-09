@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/signalresource
+set -eu
+code=0
+
+# handle
+
+got=$(handle "")
+expected="signal-resource successful"
+if [ "$got" = "$expected" ]; then
+    echo "ok - successful signal-resource"
+else
+    echo "not ok - successful signal-resource"
+    code=1
+fi
+
+got=$(handle "ValidationError")
+expected="disregarding ValidationError from signal-resource"
+if [ "$got" = "$expected" ]; then
+    echo "ok - disregard ValidationError"
+else
+    echo "not ok - disregard ValidationError"
+    code=1
+fi
+
+got=$(handle "other error")
+expected="received other error from signal-resource, retrying"
+if [ "$got" = "$expected" ]; then
+    echo "ok - retry other error"
+else
+    echo "not ok - retry other error"
+    code=1
+fi
+
+# run 
+
+function aws() {
+    exit 0
+}
+
+STACK_NAME=xxx
+INSTANCE_ID=xxx
+run
+
+function aws() {
+    >&2 echo "error"
+}
+
+STACK_NAME=xxx
+INSTANCE_ID=xxx
+run
+
+# finish
+
+if [ $code == 1 ]; then
+    echo "tests fail"
+    exit 1
+else
+    echo "tests pass"
+    exit 0
+fi

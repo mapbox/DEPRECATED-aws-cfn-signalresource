@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+function handle() {
+    set -eu
+    
+    local res=$1
+    if [ -z "$res" ]; then
+        echo "signal-resource successful"
+        exit 0
+    elif [[ $res == *"ValidationError"* ]]; then
+    # Validation errors can happen when stack is not being updated
+    # In this case, we don't need to signal - just move on
+        echo "disregarding ${res} from signal-resource"
+        exit 0
+    else
+        echo "received ${res} from signal-resource, retrying"
+    fi
+}
+
+function signal() {
+    aws cloudformation signal-resource --stack-name $STACK_NAME --logical-resource-id AutoScalingGroup --status SUCCESS --unique-id $INSTANCE_ID 2>&1
+}
+
+function run() {
+    set -eu
+
+    local retry=$(handle $(signal))
+    if [[ $retry = *"retrying"* ]]; then
+        count=$((count+1))
+        if [ "$count" -gt 4 ]; then
+            exit 0
+        fi
+        
+        sleep 2
+        run
+    fi
+}
+
+[ "$0" = "$BASH_SOURCE" ] && run
