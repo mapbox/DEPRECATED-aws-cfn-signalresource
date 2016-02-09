@@ -13,7 +13,7 @@ function handle() {
         echo "disregarding ${res} from signal-resource"
         exit 0
     else
-        echo "received ${res} from signal-resource, retrying..."
+        echo "received ${res} from signal-resource, retrying after 30 second pause..."
     fi
 }
 
@@ -29,8 +29,8 @@ function run() {
     echo $retry
     if [[ $retry = *"retrying"* ]]; then
         count=$((count+1))
-        if [ "$count" -gt 4 ]; then
-            echo "... stopping signal retry after 5 attempts"
+        if [ "$count" -gt 5 ]; then
+            echo "... stopping signal retry after 180 seconds"
             exit 0
         fi
         
