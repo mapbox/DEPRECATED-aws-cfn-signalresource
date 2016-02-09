@@ -4,59 +4,127 @@ source $(dirname $0)/signalresource
 set -eu
 code=0
 
-# handle
+echo "# handle" 
 
 got=$(handle "")
 expected="signal-resource successful"
 if [ "$got" = "$expected" ]; then
-    echo "ok - successful signal-resource"
+    echo "ok - [handle] successful signal-resource"
 else
-    echo "not ok - successful signal-resource"
+    echo "not ok - [handle] successful signal-resource"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
+    code=1
+fi
+
+got=$(handle)
+expected="signal-resource successful"
+if [ "$got" = "$expected" ]; then
+    echo "ok - [handle] successful signal-resource"
+else
+    echo "not ok - [handle] successful signal-resource"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
     code=1
 fi
 
 got=$(handle "ValidationError")
 expected="disregarding ValidationError from signal-resource"
 if [ "$got" = "$expected" ]; then
-    echo "ok - disregard ValidationError"
+    echo "ok - [handle] disregard ValidationError"
 else
-    echo "not ok - disregard ValidationError"
+    echo "not ok - [handle] disregard ValidationError"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
     code=1
 fi
 
 got=$(handle "other error")
-expected="received other error from signal-resource, retrying"
+expected="received other error from signal-resource, retrying..."
 if [ "$got" = "$expected" ]; then
-    echo "ok - retry other error"
+    echo "ok - [handle] retry other error"
 else
-    echo "not ok - retry other error"
+    echo "not ok - [handle] retry other error"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
     code=1
 fi
 
-# run 
+echo "# run" 
 
 function aws() {
     exit 0
 }
-
 STACK_NAME=xxx
 INSTANCE_ID=xxx
-run
+got=$(run)
+expected="signal-resource successful"
+if [ "$got" = "$expected" ]; then
+    echo "ok - [run] successful signal-resource"
+else
+    echo "not ok - [run] successful signal-resource"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
+    code=1
+fi
+
+function aws() {
+    >&2 echo "this is a ValidationError"
+}
+STACK_NAME=xxx
+INSTANCE_ID=xxx
+got=$(run) 
+expected="disregarding this is a ValidationError from signal-resource"
+if [ "$got" = "$expected" ]; then
+    echo "ok - [run] disregard ValidationError"
+else
+    echo "not ok - [run] disregard ValidationError"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
+    code=1
+fi
 
 function aws() {
     >&2 echo "error"
 }
-
 STACK_NAME=xxx
 INSTANCE_ID=xxx
-run
-
-# finish
+got=$(run 1)
+expected="received error from signal-resource, retrying...
+received error from signal-resource, retrying...
+received error from signal-resource, retrying...
+received error from signal-resource, retrying...
+received error from signal-resource, retrying...
+... stopping signal retry after 5 attempts"
+if [ "$got" = "$expected" ]; then
+    echo "ok - [run] retries other errors"
+else
+    echo "not ok - [run] retries other errors"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
+    code=1
+fi
 
 if [ $code == 1 ]; then
-    echo "tests fail"
+    echo ""
+    echo "not ok - tests fail"
     exit 1
 else
-    echo "tests pass"
+    echo ""
+    echo "ok - tests pass"
     exit 0
 fi
