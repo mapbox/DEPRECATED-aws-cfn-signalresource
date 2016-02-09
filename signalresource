@@ -39,4 +39,4 @@ function run() {
     fi
 }
 
-[ "$0" = "$BASH_SOURCE" ] && run
+[ -z "$BASH_SOURCE" ] || [ "$0" = "$BASH_SOURCE" ] && run
