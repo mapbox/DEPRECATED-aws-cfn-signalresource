@@ -4,7 +4,7 @@ source $(dirname $0)/signalresource
 set -eu
 code=0
 
-echo "# handle" 
+echo "# handle"
 
 got=$(handle "")
 expected="signal-resource successful"
@@ -58,7 +58,7 @@ else
     code=1
 fi
 
-echo "# run" 
+echo "# run"
 
 function aws() {
     exit 0
@@ -85,7 +85,7 @@ function aws() {
 
 STACK_NAME=xxx
 INSTANCE_ID=xxx
-got=$(run) 
+got=$(run)
 expected="disregarding this is a ValidationError from signal-resource"
 if [ "$got" = "$expected" ]; then
     echo "ok - [run] disregard ValidationError"

@@ -2,7 +2,7 @@
 
 function handle() {
     set -eu
-    
+
     local res=${@:-""}
     if [ -z "$res" ]; then
         echo "signal-resource successful"
@@ -33,7 +33,7 @@ function run() {
             echo "... stopping signal retry after 180 seconds"
             exit 1
         fi
-        
+
         sleep $pause
         run $pause
     fi
