@@ -2,7 +2,7 @@
 
 function handle() {
     set -eu
-    
+
     local res=${@:-""}
     if [ -z "$res" ]; then
         echo "signal-resource successful"
@@ -18,7 +18,8 @@ function handle() {
 }
 
 function signal() {
-    aws cloudformation signal-resource --stack-name $STACK_NAME --logical-resource-id AutoScalingGroup --status SUCCESS --unique-id $INSTANCE_ID 2>&1
+    local logicalid=${AUTOSCALING_GROUP_NAME:-"AutoScalingGroup"}
+    aws cloudformation signal-resource --stack-name $STACK_NAME --logical-resource-id $logicalid --status SUCCESS --unique-id $INSTANCE_ID 2>&1
 }
 
 count=0
@@ -33,7 +34,7 @@ function run() {
             echo "... stopping signal retry after 180 seconds"
             exit 1
         fi
-        
+
         sleep $pause
         run $pause
     fi
