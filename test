@@ -61,11 +61,69 @@ fi
 echo "# run"
 
 function aws() {
+    stack=$4
+    resource=$6
+    instance=$8
+
+    if [ "$stack" != "xxx" ]; then
+        echo "unexpected stack $stack"
+        exit 1
+    fi
+
+    if [ "$resource" != "AutoScalingGroup" ]; then
+        echo "unexpected resource $resource`"
+        exit 1
+    fi
+
+    if [ "$instance" != "xxx" ]; then
+        echo "unexpected instance $instance`"
+        exit 1
+    fi
+
     exit 0
 }
 
 STACK_NAME=xxx
 INSTANCE_ID=xxx
+got=$(run)
+expected="signal-resource successful"
+if [ "$got" = "$expected" ]; then
+    echo "ok - [run] successful signal-resource"
+else
+    echo "not ok - [run] successful signal-resource"
+    echo ""
+    echo "  expected: ${expected}"
+    echo "  got: ${got}"
+    echo ""
+    code=1
+fi
+
+function aws() {
+    stack=$4
+    resource=$6
+    instance=$8
+
+    if [ "$stack" != "xxx" ]; then
+        echo "unexpected stack $stack"
+        exit 1
+    fi
+
+    if [ "$resource" != "xxx" ]; then
+        echo "unexpected resource $resource`"
+        exit 1
+    fi
+
+    if [ "$instance" != "xxx" ]; then
+        echo "unexpected instance $instance`"
+        exit 1
+    fi
+
+    exit 0
+}
+
+STACK_NAME=xxx
+INSTANCE_ID=xxx
+AUTOSCALING_GROUP_NAME=xxx
 got=$(run)
 expected="signal-resource successful"
 if [ "$got" = "$expected" ]; then
