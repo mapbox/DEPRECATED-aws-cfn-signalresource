@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source $(dirname $0)/signalresource
+source $(dirname $0)/bin/aws-cfn-signalresource
 set -eu
 code=0
 
