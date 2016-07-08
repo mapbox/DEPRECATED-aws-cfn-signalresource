@@ -6,7 +6,7 @@ Wrapper around aws cli's `cloudformation signal-resource` to handle retries & er
 ### run from S3
 
 ```
-$ curl -s https://s3.amazonaws.com/mapbox/apps/aws-cfn-signalresource/v0.0.1 | bash
+$ curl -s https://s3.amazonaws.com/mapbox/apps/aws-cfn-signalresource/v0.2.0 | bash
 ```
 
 ### Install via NPM
