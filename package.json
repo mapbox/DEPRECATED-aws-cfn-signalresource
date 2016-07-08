@@ -1,0 +1,17 @@
+{
+  "name": "aws-cfn-signalresource",
+  "version": "0.2.0",
+  "description": "wraps `aws cloudformation signal-resource` to handle errors & retries",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mapbox/aws-cfn-signalresource.git"
+  },
+  "bin": {
+    "aws-cfn-signalresource": "bin/aws-cfn-signalresource"
+  },
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/mapbox/aws-cfn-signalresource/issues"
+  },
+  "homepage": "https://github.com/mapbox/aws-cfn-signalresource"
+}
