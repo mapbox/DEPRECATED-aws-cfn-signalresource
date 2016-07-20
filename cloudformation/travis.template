@@ -1,0 +1,81 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "aws-cfn-signalresource travis user",
+    "Resources": {
+        "User": {
+            "Type": "AWS::IAM::User",
+            "Properties": {
+                "Path": "/service/",
+                "Policies": [
+                    {
+                        "PolicyName": "publish",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "s3:PutObject",
+                                        "s3:PutObjectAcl"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "arn:aws:s3:::mapbox/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-ap-northeast-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-ap-northeast-2/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-ap-south-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-ap-southeast-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-ap-southeast-2/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-eu-central-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-eu-west-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-sa-east-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-us-east-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-us-west-1/apps/aws-cfn-signalresource/*",
+                                        "arn:aws:s3:::mapbox-us-west-2/apps/aws-cfn-signalresource/*"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "AccessKey": {
+            "Type": "AWS::IAM::AccessKey",
+            "Properties": {
+                "UserName": {
+                    "Ref": "User"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "AwsAccessKeyId": {
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "AWS_ACCESS_KEY_ID=",
+                        {
+                            "Ref": "AccessKey"
+                        }
+                    ]
+                ]
+            }
+        },
+        "AwsSecretAccessKey": {
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "AWS_SECRET_ACCESS_KEY=",
+                        {
+                            "Fn::GetAtt": [
+                                "AccessKey",
+                                "SecretAccessKey"
+                            ]
+                        }
+                    ]
+                ]
+            }
+        }
+    }
+}
