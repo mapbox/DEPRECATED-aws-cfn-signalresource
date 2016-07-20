@@ -14,12 +14,22 @@ ap-southeast-1
 ap-southeast-2
 "
 
+cnregions="
+cn-north-1
+"
+
 if git describe --tags --exact-match 2> /dev/null; then
     pip install awscli
     tag=$(git describe --tags --exact-match)
     aws s3 cp --acl public-read --region us-east-1 "$(dirname $0)/bin/aws-cfn-signalresource" s3://mapbox/apps/aws-cfn-signalresource/$tag
     for region in $regions; do
-        aws s3 cp --acl public-read --region $region "$(dirname $0)/bin/aws-cfn-signalresource" s3://mapbox-$region/apps/aws-cfn-signalresource/$tag
+      aws s3 cp --acl public-read --region $region "$(dirname $0)/bin/aws-cfn-signalresource" s3://mapbox-$region/apps/aws-cfn-signalresource/$tag
+    done
+
+    export AWS_ACCESS_KEY_ID=$AWSCN_ACCESS_KEY_ID
+    export AWS_SECRET_ACCESS_KEY=$AWSCN_SECRET_ACCESS_KEY
+
+    for region in $cnregions; do
+      aws s3 cp --acl public-read --region $region "$(dirname $0)/bin/aws-cfn-signalresource" s3://mapbox-$region/apps/aws-cfn-signalresource/$tag
     done
 fi
-
