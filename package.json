@@ -2,7 +2,7 @@
   "bin": {
     "aws-cfn-signalresource": "bin/aws-cfn-signalresource"
   }, 
-  "name": "aws-cfn-signalresource", 
+  "name": "@mapbox/aws-cfn-signalresource",
   "license": "BSD-2-Clause", 
   "bugs": {
     "url": "https://github.com/mapbox/aws-cfn-signalresource/issues"
