@@ -1,4 +1,4 @@
-aws-cfn-signalresource
+DEPRECATED: aws-cfn-signalresource
 ------
 
 Wrapper around aws cli's `cloudformation signal-resource` to handle retries & errors. Intended to be used to send success signals from instances in an Auto Scaling Group using UpdatePolicy.
